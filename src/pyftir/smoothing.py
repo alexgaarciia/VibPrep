@@ -36,7 +36,7 @@ def savgol_smoothing(data, window_length=11, polyorder=2):
         window_length=window_length,
         polyorder=polyorder,
         deriv=0,
-        axis=1
+        axis=-1
     )
 
 
@@ -66,4 +66,4 @@ def moving_average_smoothing(data, window_size):
         Smoothed spectral data.
     """
     weights = np.ones(window_size) / window_size
-    return convolve1d(data, weights, axis=1, mode='reflect')
+    return convolve1d(data, weights, axis=-1, mode='reflect')
