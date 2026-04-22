@@ -53,11 +53,17 @@ def trim_spectral_region(data, wavelength, region):
     if region is None or region == "full":
         return data, wavelength
 
+    if isinstance(region, tuple):
+        min_wavenumber, max_wavenumber = region
+        mask = (wavelength >= min_wavenumber) & (wavelength <= max_wavenumber)
+        return data[:, mask], wavelength[mask]
+
     if region not in REGIONS:
-        raise ValueError(f"Unknown region: {region}")
-    
+        raise ValueError(
+            f"Unknown region: '{region}'. "
+            f"Valid: {list(REGIONS.keys())} or tuple (min, max)"
+        )
+
     min_wavenumber, max_wavenumber = REGIONS[region]
     mask = (wavelength >= min_wavenumber) & (wavelength <= max_wavenumber)
-
     return data[:, mask], wavelength[mask]
-    
