@@ -12,6 +12,46 @@ VALID_STEPS = {"baseline", "scatter", "smoothing", "derivative", "normalization"
 
 
 class PreprocessingPipeline():
+    """
+    FTIR preprocessing pipeline.
+
+    This class applies a configurable sequence of preprocessing
+    operations to FTIR spectra, including replicate averaging,
+    spectral region selection, baseline correction, scatter correction,
+    smoothing, derivative computation, and normalization.
+
+    Parameters
+    ----------
+    config : dict
+        Pipeline configuration dictionary with the following keys:
+
+        - ``average`` : bool
+            Whether to average replicate spectra.
+        - ``region`` : str
+            Spectral region to retain (e.g. ``"full"``,
+            ``"fingerprint"``, ``"amide"``, ``"lipid"``,
+            ``"nucleic"``).
+        - ``steps`` : list[tuple]
+            Ordered list of preprocessing steps. Each element must be
+            a tuple ``(step_name, step_value)``.
+
+    Examples
+    --------
+    >>> config = {
+    ...     "average": True,
+    ...     "region": "fingerprint",
+    ...     "steps": [
+    ...         ("baseline", "als"),
+    ...         ("scatter", "snv"),
+    ...         ("normalization", "area"),
+    ...     ],
+    ... }
+    >>> pipeline = PreprocessingPipeline(config)
+    >>> X_proc, wn_proc, meta_proc = pipeline.transform(
+    ...     X, wavelengths, metadata
+    ... )
+    """
+
     def __init__(self, config):
         self.config = config
         self.average = config["average"]
@@ -20,6 +60,40 @@ class PreprocessingPipeline():
         self._validate_steps()
 
     def transform(self, X, wavelengths, metadata=None, groupby_cols=None):
+        """
+        Apply the preprocessing pipeline to a set of spectra.
+
+        Parameters
+        ----------
+        X : ndarray of shape (n_samples, n_features)
+            Spectral intensity matrix.
+        wavelengths : ndarray of shape (n_features,)
+            Wavenumber axis corresponding to the spectra.
+        metadata : pandas.DataFrame, optional
+            Metadata associated with each spectrum. Required if
+            replicate averaging is enabled.
+        groupby_cols : str or list[str], optional
+            Metadata columns used to identify replicate groups when
+            averaging spectra.
+
+        Returns
+        -------
+        X : ndarray
+            Preprocessed spectra.
+        wavelengths : ndarray
+            Processed wavenumber axis.
+        metadata : pandas.DataFrame or None
+            Updated metadata after preprocessing.
+
+        Notes
+        -----
+        The preprocessing workflow is applied in the following order:
+
+        1. Ensure ascending wavenumber order.
+        2. Average replicates (optional).
+        3. Trim the selected spectral region.
+        4. Apply configured preprocessing steps sequentially.
+        """
         X, wavelengths = self._ensure_ascending(X, wavelengths)
         X, metadata = self._apply_average(X, metadata, groupby_cols)
         X, wavelengths = self._apply_trim(X, wavelengths)
