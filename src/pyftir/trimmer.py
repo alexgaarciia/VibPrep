@@ -4,6 +4,7 @@ REGIONS = {
     "amide": (1500, 1700),
     "lipid": (2800, 3000),
     "nucleic": (1000, 1250),
+    "polysaccharide": (900, 1200)
 }
 
 
@@ -28,11 +29,12 @@ def trim_spectral_region(data, wavelength, region):
     region : str or None, default=None
         Name of the predefined spectral region to extract. Available options:
 
-        - "full"         : return full spectrum (no trimming)
-        - "fingerprint"  : 900–1800 cm⁻¹
-        - "amide"        : 1500–1700 cm⁻¹
-        - "lipid"        : 2800–3000 cm⁻¹
-        - "nucleic"      : 1000–1250 cm⁻¹
+        - "full": return full spectrum (no trimming)
+        - "fingerprint": 900–1800 cm⁻¹
+        - "amide": 1500–1700 cm⁻¹
+        - "lipid": 2800–3000 cm⁻¹
+        - "nucleic": 1000–1250 cm⁻¹
+        - "polysaccharide": 900-1200 cm⁻¹
 
         If None or "full", the original data is returned unchanged.
 
