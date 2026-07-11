@@ -3,7 +3,7 @@ from itertools import product
 def generate_preprocessing_configs(
     average_options=(False, True),
     regions=("full", "fingerprint", "amide", "lipid", "nucleic"),
-    baseline_options=("none", "polynomial", "als"),
+    baseline_options=("none", "polynomial", "als", "aspls"),
     scatter_options=("none", "snv"),
     smoothing_options=("none", "savitzky_golay", "moving_average"),
     derivative_options=("none", 1, 2, "1+2"),

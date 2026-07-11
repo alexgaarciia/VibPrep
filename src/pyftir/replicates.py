@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def average_replicates(X, metadata, groupby_cols, method="mean"):
     """
     Aggregate replicate spectra based on metadata grouping.

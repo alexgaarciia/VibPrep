@@ -1,5 +1,5 @@
 import numpy as np
-from pybaselines.whittaker import asls
+from pybaselines.whittaker import asls, aspls
 
 
 def polynomial_baseline_correction(data, wavelength, degree=2):
@@ -89,3 +89,44 @@ def als_baseline_correction(data, lam=1e5, p=0.01, niter=10):
     corrected = data - baseline
 
     return corrected, baseline
+
+
+def aspls_baseline_correction(data, lam=1e5, max_iter=10):
+    """
+    Perform Adaptive Smoothness Penalized Least Squares (asPLS) baseline 
+    correction on 2D spectral data.
+
+    A refinement of ALS that adapts the smoothness penalty locally along
+    the spectrum, making it more robust to baselines with variable curvature
+    and to spectra with broad peaks.
+
+    Parameters
+    ----------
+    data : numpy.ndarray of shape (n_samples, n_features)
+        Spectral intensity matrix where each row corresponds to one spectrum.
+
+    lam : float, default=1e5
+        Smoothness parameter. Higher values produce smoother baselines.
+        Same role as in ALS, but applied adaptively across the spectrum.
+
+    max_iter : int, default=10
+        Maximum number of iterations.
+
+    Returns
+    -------
+    corrected : numpy.ndarray of shape (n_samples, n_features)
+        Baseline-corrected spectra.
+
+    baseline : numpy.ndarray of shape (n_samples, n_features)
+        Estimated asPLS baseline for each spectrum.
+    """
+    data = np.asarray(data)
+    baseline = np.zeros_like(data)
+
+    for i in range(data.shape[0]):
+        bline, _ = aspls(data[i], lam=lam, max_iter=max_iter)
+        baseline[i] = bline
+
+    corrected = data - baseline
+
+    return corrected, baseline    

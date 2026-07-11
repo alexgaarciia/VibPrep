@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def intensity_normalization(data, method="none"):
     """
     Apply intensity normalization to spectral data.
