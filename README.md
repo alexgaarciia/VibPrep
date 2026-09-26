@@ -486,4 +486,4 @@ If you use VibPrep in your research, please cite it:
 
 ## License
 
-This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+This project is licensed under the **MIT License**. See [LICENSE](https://github.com/alexgaarciia/VibPrep/blob/main/LICENSE) for details.
