@@ -6,7 +6,7 @@ def savgol_derivative(data, window_length=11, polyorder=2, deriv=1, delta=1.0):
     Compute spectral derivatives using the Savitzky–Golay filter (row-wise).
 
     This function applies a local polynomial fit within a moving window and
-    computes the specified order derivative of the spectral signal. In FTIR
+    computes the specified order derivative of the spectral signal. In FTIR/Raman
     spectroscopy, Savitzky–Golay derivatives are commonly used to reduce
     baseline effects, enhance resolution of overlapping peaks, and highlight
     subtle spectral features.

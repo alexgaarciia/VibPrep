@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyftir"
+name = "vibprep"
 version = "0.1.0"
-description = "Modular FTIR preprocessing library for biomedical spectroscopy"
+description = "Modular preprocessing library for vibrational spectroscopy (FTIR, Raman)"
 readme = "README.md"
 requires-python = ">=3.9"
 
@@ -17,7 +17,9 @@ license = { text = "MIT" }
 
 dependencies = [
   "numpy>=1.22",
-  "scipy>=1.8"
+  "scipy>=1.8",
+  "pandas>=1.4",
+  "pybaselines>=1.0"
 ]
 
 [project.optional-dependencies]

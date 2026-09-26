@@ -1,11 +1,15 @@
 import numpy as np
-from pyftir.replicates import average_replicates
-from pyftir.trimmer import trim_spectral_region
-from pyftir.baseline import polynomial_baseline_correction, als_baseline_correction
-from pyftir.scatter import standard_normal_variate
-from pyftir.smoothing import savgol_smoothing, moving_average_smoothing
-from pyftir.derivatives import savgol_derivative
-from pyftir.normalization import intensity_normalization
+from vibprep.replicates import average_replicates
+from vibprep.trimmer import trim_spectral_region
+from vibprep.baseline import (
+    polynomial_baseline_correction,
+    als_baseline_correction,
+    aspls_baseline_correction,
+)
+from vibprep.scatter import standard_normal_variate
+from vibprep.smoothing import savgol_smoothing, moving_average_smoothing
+from vibprep.derivatives import savgol_derivative
+from vibprep.normalization import intensity_normalization
 
 
 VALID_STEPS = {"baseline", "scatter", "smoothing", "derivative", "normalization"}
@@ -13,10 +17,10 @@ VALID_STEPS = {"baseline", "scatter", "smoothing", "derivative", "normalization"
 
 class PreprocessingPipeline():
     """
-    FTIR preprocessing pipeline.
+    Vibrational spectroscopy (FTIR, Raman) preprocessing pipeline.
 
     This class applies a configurable sequence of preprocessing
-    operations to FTIR spectra, including replicate averaging,
+    operations to FTIR or Raman spectra, including replicate averaging,
     spectral region selection, baseline correction, scatter correction,
     smoothing, derivative computation, and normalization.
 
@@ -143,6 +147,9 @@ class PreprocessingPipeline():
             return corrected
         elif method == "als":
             corrected, _ = als_baseline_correction(X, lam=1e5, p=0.01, niter=10)
+            return corrected
+        elif method == "aspls":
+            corrected, _ = aspls_baseline_correction(X, lam=1e5, max_iter=10)
             return corrected
         else:
             raise ValueError(f"Baseline desconocido: '{method}'")

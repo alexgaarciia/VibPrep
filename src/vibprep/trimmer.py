@@ -10,7 +10,10 @@ REGIONS = {
 
 def trim_spectral_region(data, wavelength, region):
     """
-    Select (trim) a specific spectral region from FTIR data.
+    Select (trim) a specific spectral region from FTIR or Raman data.
+
+    The predefined regions are FTIR (infrared) bands. For Raman spectra,
+    pass a custom ``(min, max)`` tuple in Raman shift units (cm⁻¹).
 
     This function extracts a predefined wavenumber interval from a
     spectral dataset. The trimming is performed column-wise using
@@ -26,8 +29,9 @@ def trim_spectral_region(data, wavelength, region):
         Spectral axis (wavenumbers). Must be aligned with the columns of `data`.
         It is recommended that the axis is sorted in ascending order.
 
-    region : str or None, default=None
-        Name of the predefined spectral region to extract. Available options:
+    region : str, tuple of (float, float) or None
+        Name of the predefined spectral region to extract, or a custom
+        ``(min, max)`` interval. Available predefined options:
 
         - "full": return full spectrum (no trimming)
         - "fingerprint": 900–1800 cm⁻¹

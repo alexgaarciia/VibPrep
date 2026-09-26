@@ -8,7 +8,7 @@ def savgol_smoothing(data, window_length=11, polyorder=2):
     Apply the Savitzky–Golay filter to spectral data (row-wise).
 
     This function performs smoothing using a local polynomial fit within a moving window.
-    In vibrational spectroscopy (e.g., FTIR), Savitzky–Golay filtering is commonly used
+    In vibrational spectroscopy (FTIR, Raman), Savitzky–Golay filtering is commonly used
     to reduce noise, remove baseline effects, and enhance peak resolution.
 
     Parameters
@@ -45,7 +45,7 @@ def moving_average_smoothing(data, window_size):
     Apply uniform moving average smoothing to spectral data (row-wise).
 
     This function performs smoothing by replacing each data point with the
-    average of its neighboring points within a specified window. In FTIR
+    average of its neighboring points within a specified window. In FTIR/Raman
     spectroscopy, moving average smoothing can reduce high-frequency noise,
     though it may broaden spectral peaks more than Savitzky–Golay filtering.
 
