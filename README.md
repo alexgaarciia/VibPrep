@@ -4,13 +4,8 @@
 
 It provides simple, NumPy-based building blocks (baseline correction, scatter correction, smoothing, derivatives, normalization, region selection and replicate averaging) and a configurable **pipeline** that chains them together reproducibly. It also includes a **configuration generator** to systematically explore many preprocessing combinations, for example when benchmarking machine-learning models.
 
-<!--
-  README IMAGE
-  Save your figure as docs/images/overview.png (or change the path below).
-  Recommended width: 900–1200 px.
--->
 <p align="center">
-  <img src="docs/images/overview.png" alt="VibPrep overview" width="900">
+  <img src="https://raw.githubusercontent.com/alexgaarciia/VibPrep/main/docs/images/overview.png" alt="VibPrep overview" width="900">
 </p>
 
 > 🚧 **Status: early development.** The API may still change between versions.
@@ -63,7 +58,13 @@ Because of this, the same family of preprocessing methods is used for both techn
 
 VibPrep requires **Python ≥ 3.9** and depends on `numpy`, `scipy`, `pandas` and `pybaselines`.
 
-### Option A: Install directly from GitHub
+### Option A: Install from PyPI
+
+```bash
+pip install vibprep
+```
+
+To install the latest development version directly from GitHub instead:
 
 ```bash
 pip install git+https://github.com/alexgaarciia/VibPrep.git
@@ -449,7 +450,7 @@ VibPrep/
 - [ ] Predefined Raman regions
 - [ ] Additional methods (e.g. MSC, EMSC, rubberband baseline)
 - [ ] Plotting utilities
-- [ ] Publication on PyPI
+- [x] Publication on PyPI
 
 ---
 

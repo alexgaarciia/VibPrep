@@ -120,8 +120,8 @@ class PreprocessingPipeline():
         for step_name, _ in self.steps:
             if step_name not in VALID_STEPS:
                 raise ValueError(
-                    f"Paso desconocido: '{step_name}'. "
-                    f"Válidos: {VALID_STEPS}"
+                    f"Unknown step: '{step_name}'. "
+                    f"Valid: {VALID_STEPS}"
                 )
             
     def _ensure_ascending(self, X, wavelengths):
@@ -152,7 +152,7 @@ class PreprocessingPipeline():
             corrected, _ = aspls_baseline_correction(X, lam=1e5, max_iter=10)
             return corrected
         else:
-            raise ValueError(f"Baseline desconocido: '{method}'")
+            raise ValueError(f"Unknown baseline method: '{method}'")
 
     def _apply_scatter(self, X, method):
         if method == "none":
@@ -160,7 +160,7 @@ class PreprocessingPipeline():
         elif method == "snv":
             return standard_normal_variate(X)
         else:
-            raise ValueError(f"Scatter desconocido: '{method}'")
+            raise ValueError(f"Unknown scatter method: '{method}'")
 
     def _apply_smoothing(self, X, method):
         if method == "none":
@@ -170,7 +170,7 @@ class PreprocessingPipeline():
         elif method == "moving_average":
             return moving_average_smoothing(X, window_size=5)
         else:
-            raise ValueError(f"Smoothing desconocido: '{method}'")
+            raise ValueError(f"Unknown smoothing method: '{method}'")
 
     def _apply_derivative(self, X, wavelengths, order):
         real_delta = abs(wavelengths[1] - wavelengths[0])
@@ -185,7 +185,7 @@ class PreprocessingPipeline():
             deriv2 = savgol_derivative(X, window_length=11, polyorder=2, deriv=2, delta=real_delta)
             return np.concatenate([deriv1, deriv2], axis=1)
         else:
-            raise ValueError(f"Orden de derivada desconocido: '{order}'")
+            raise ValueError(f"Unknown derivative order: '{order}'")
 
     def _apply_normalization(self, X, method):
         return intensity_normalization(X, method=method)

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,7 +13,27 @@ authors = [
   { name = "Alejandro Leonardo García Navarro" }
 ]
 
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
+
+keywords = [
+  "spectroscopy",
+  "vibrational spectroscopy",
+  "FTIR",
+  "Raman",
+  "preprocessing",
+  "baseline correction",
+  "chemometrics",
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Chemistry",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
 
 dependencies = [
   "numpy>=1.22",
@@ -21,6 +41,11 @@ dependencies = [
   "pandas>=1.4",
   "pybaselines>=1.0"
 ]
+
+[project.urls]
+Homepage = "https://github.com/alexgaarciia/VibPrep"
+Repository = "https://github.com/alexgaarciia/VibPrep"
+Issues = "https://github.com/alexgaarciia/VibPrep/issues"
 
 [project.optional-dependencies]
 dev = [
