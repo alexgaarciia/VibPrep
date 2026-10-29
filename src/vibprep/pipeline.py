@@ -35,6 +35,9 @@ class PreprocessingPipeline():
             Spectral region to retain (e.g. ``"full"``,
             ``"fingerprint"``, ``"amide"``, ``"lipid"``,
             ``"nucleic"``).
+        - ``exclude`` : tuple or list[tuple], optional
+            Sub-region(s) ``(min, max)`` to remove from ``region``
+            (e.g. ``(2000, 2500)``).
         - ``steps`` : list[tuple]
             Ordered list of preprocessing steps. Each element must be
             a tuple ``(step_name, step_value)``.
@@ -60,6 +63,7 @@ class PreprocessingPipeline():
         self.config = config
         self.average = config["average"]
         self.region = config["region"]
+        self.exclude = config.get("exclude")
         self.steps = config["steps"]
         self._validate_steps()
 
@@ -137,7 +141,7 @@ class PreprocessingPipeline():
         return X_agg, metadata_agg
 
     def _apply_trim(self, X, wavelengths):
-        return trim_spectral_region(X, wavelengths, self.region)
+        return trim_spectral_region(X, wavelengths, self.region, self.exclude)
 
     def _apply_baseline(self, X, wavelengths, method):
         if method == "none":

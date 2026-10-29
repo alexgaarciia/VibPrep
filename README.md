@@ -225,6 +225,20 @@ X_fp, wn_fp = trim_spectral_region(X, wavelengths, "fingerprint")
 X_custom, wn_custom = trim_spectral_region(X, wavelengths, (600, 1700))
 ```
 
+To **remove a sub-region** from the selected range in a single call (e.g. the CO₂ band), use `exclude`. It accepts one `(min, max)` interval or a list of them:
+
+```python
+# keep 1000-3000 except 2000-2500
+X_cut, wn_cut = trim_spectral_region(X, wavelengths, (1000, 3000), exclude=(2000, 2500))
+
+# several gaps at once
+X_cut, wn_cut = trim_spectral_region(
+    X, wavelengths, (1000, 3000), exclude=[(2000, 2500), (2800, 2850)]
+)
+```
+
+In `PreprocessingPipeline`, add the optional key `"exclude"` to the config (`{"region": (1000, 3000), "exclude": (2000, 2500), ...}`).
+
 ### 3. Baseline correction
 
 **Module:** `vibprep.baseline`

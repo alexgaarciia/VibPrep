@@ -1,3 +1,6 @@
+import numpy as np
+
+
 REGIONS = {
     "full": (None, None),
     "fingerprint": (900, 1800),
@@ -8,7 +11,7 @@ REGIONS = {
 }
 
 
-def trim_spectral_region(data, wavelength, region):
+def trim_spectral_region(data, wavelength, region, exclude=None):
     """
     Select (trim) a specific spectral region from FTIR or Raman data.
 
@@ -42,6 +45,14 @@ def trim_spectral_region(data, wavelength, region):
 
         If None or "full", the original data is returned unchanged.
 
+    exclude : tuple of (float, float) or list of such tuples, optional
+        Sub-region(s) to remove from the selected region, as inclusive
+        ``(min, max)`` intervals. For example, ``region=(1000, 3000)`` with
+        ``exclude=(2000, 2500)`` keeps 1000-2000 and 2500-3000 (the
+        boundaries 2000 and 2500 are removed as well). Several intervals can
+        be given as a list. Applied after ``region``, also when
+        ``region`` is "full" or None.
+
     Returns
     -------
     data_trimmed : numpy.ndarray of shape (n_samples, n_selected_features)
@@ -53,23 +64,61 @@ def trim_spectral_region(data, wavelength, region):
     Raises
     ------
     ValueError
-        If the specified region is not defined in REGIONS.
+        If the specified region is not defined in REGIONS, or if an
+        ``exclude`` interval is not a valid ``(min, max)`` pair.
     """
 
     if region is None or region == "full":
-        return data, wavelength
-
-    if isinstance(region, tuple):
+        min_wavenumber, max_wavenumber = REGIONS["full"]
+    elif isinstance(region, tuple):
         min_wavenumber, max_wavenumber = region
-        mask = (wavelength >= min_wavenumber) & (wavelength <= max_wavenumber)
-        return data[:, mask], wavelength[mask]
-
-    if region not in REGIONS:
+    elif region in REGIONS:
+        min_wavenumber, max_wavenumber = REGIONS[region]
+    else:
         raise ValueError(
             f"Unknown region: '{region}'. "
             f"Valid: {list(REGIONS.keys())} or tuple (min, max)"
         )
 
-    min_wavenumber, max_wavenumber = REGIONS[region]
-    mask = (wavelength >= min_wavenumber) & (wavelength <= max_wavenumber)
+    mask = np.ones(len(wavelength), dtype=bool)
+    if min_wavenumber is not None:
+        mask &= wavelength >= min_wavenumber
+    if max_wavenumber is not None:
+        mask &= wavelength <= max_wavenumber
+
+    for low, high in _normalize_exclude(exclude):
+        mask &= ~((wavelength >= low) & (wavelength <= high))
+
+    if mask.all():
+        return data, wavelength
     return data[:, mask], wavelength[mask]
+
+def _normalize_exclude(exclude):
+    """Return ``exclude`` as a list of validated ``(min, max)`` tuples."""
+    if exclude is None:
+        return []
+    if (
+        isinstance(exclude, (tuple, list))
+        and len(exclude) == 2
+        and not isinstance(exclude[0], (tuple, list))
+    ):
+        exclude = [exclude]
+    elif not isinstance(exclude, (tuple, list)):
+        raise ValueError(
+            f"Invalid exclude: {exclude!r}. "
+            "Expected (min, max) or a list of (min, max)."
+        )
+
+    intervals = []
+    for interval in exclude:
+        try:
+            low, high = interval
+        except (TypeError, ValueError):
+            raise ValueError(
+                f"Invalid exclude interval: {interval!r}. "
+                "Expected (min, max) or a list of (min, max)."
+            )
+        if low > high:
+            raise ValueError(f"Invalid exclude interval {interval!r}: min > max.")
+        intervals.append((low, high))
+    return intervals
